@@ -1,9 +1,15 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
-import { Queue } from 'bull';
+import { Queue, Job } from 'bull';
 import { InjectQueue } from '@nestjs/bull';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
+import * as crypto from 'crypto';
 import { SyncsService } from '../modules/syncs/syncs.service';
 import { IntegrationsService } from '../modules/integrations/integrations.service';
 import { SyncStateService } from '../modules/syncs/services/sync-state.service';
+import { Sync } from '../modules/syncs/entities/sync.entity';
+import { ObjectMapping } from '../modules/syncs/entities/object-mapping.entity';
+import { ProvidersRegistry } from '../providers/providers.registry';
 import { createChildLogger } from '../common/logger';
 
 const logger = createChildLogger('SyncEngine');
@@ -15,9 +21,14 @@ export class SyncEngine implements OnModuleInit {
     private syncQueue: Queue,
     @InjectQueue('webhook-processor')
     private webhookQueue: Queue,
+    @InjectRepository(Sync)
+    private syncsRepository: Repository<Sync>,
+    @InjectRepository(ObjectMapping)
+    private objectMappingRepository: Repository<ObjectMapping>,
     private syncsService: SyncsService,
     private integrationsService: IntegrationsService,
     private syncStateService: SyncStateService,
+    private providersRegistry: ProvidersRegistry,
   ) {}
 
   async onModuleInit() {
@@ -28,40 +39,155 @@ export class SyncEngine implements OnModuleInit {
 
   private setupWorkers() {
     // Sync processor worker
-    this.syncQueue.process(5, async (job) => {
-      logger.info(`Processing sync job: ${job.data.syncId}`);
-
-      try {
-        // TODO: Implement full sync logic
-        const sync = await this.syncsService.findById(job.data.syncId);
-        if (!sync) {
-          throw new Error('Sync not found');
-        }
-
-        // Placeholder: Log sync execution
-        logger.info(`Sync executed: ${sync.id}`);
-
-        return { success: true };
-      } catch (error) {
-        logger.error(error, `Sync job failed: ${job.data.syncId}`);
-        throw error;
-      }
-    });
+    this.syncQueue.process(5, (job) => this.processSyncJob(job));
 
     // Webhook processor worker
-    this.webhookQueue.process(10, async (job) => {
-      logger.info(`Processing webhook job: ${job.data.webhookId}`);
-
-      try {
-        // TODO: Implement webhook event processing
-        return { success: true };
-      } catch (error) {
-        logger.error(error, `Webhook job failed: ${job.data.webhookId}`);
-        throw error;
-      }
-    });
+    this.webhookQueue.process(10, (job) => this.processWebhookJob(job));
 
     logger.info('Workers initialized');
+  }
+
+  private async processSyncJob(job: Job<{ syncId: string }>) {
+    const { syncId } = job.data;
+    logger.info(`Processing sync job: ${syncId}`);
+
+    try {
+      const sync = await this.syncsService.findById(syncId);
+      if (!sync) {
+        throw new Error('Sync not found');
+      }
+
+      const state = await this.syncStateService.getOrCreate(syncId);
+
+      // Get integrations
+      const sourceInteg = await this.integrationsService.findById(
+        sync.source_integration_id,
+      );
+      const destInteg = await this.integrationsService.findById(
+        sync.destination_integration_id,
+      );
+
+      if (!sourceInteg || !destInteg) {
+        throw new Error('Integration not found');
+      }
+
+      // Get providers
+      const sourceProvider = this.providersRegistry.get(sourceInteg.provider);
+      const destProvider = this.providersRegistry.get(destInteg.provider);
+
+      // Step 1: Fetch from source
+      logger.info(`Fetching from ${sourceInteg.provider}`);
+      const sourceData = await sourceProvider.fetch(
+        sourceInteg,
+        sync.source_config,
+        state.source_cursor,
+      );
+
+      // Step 2: Fetch from destination (for conflict detection)
+      logger.info(`Fetching from ${destInteg.provider}`);
+      const destData = await destProvider.fetch(
+        destInteg,
+        sync.destination_config,
+        state.destination_cursor,
+      );
+
+      // Step 3: Detect changes
+      const { toCreate, toUpdate, toDelete } = await this.detectChanges(
+        sync,
+        sourceData.objects,
+        destData.objects,
+        state,
+      );
+
+      logger.info(
+        `Detected changes: ${toCreate.length} create, ${toUpdate.length} update, ${toDelete.length} delete`,
+      );
+
+      // Step 4: Push to destination
+      if (sync.direction !== 'one_way' || sync.source_integration_id === sync.destination_integration_id) {
+        await destProvider.pushChanges(destInteg, sync.destination_config, {
+          toCreate,
+          toUpdate,
+          toDelete,
+        });
+      }
+
+      // Step 5: Update sync state
+      await this.syncStateService.update(syncId, {
+        source_cursor: sourceData.nextCursor,
+        destination_cursor: destData.nextCursor,
+        last_sync_at: new Date(),
+        retry_count: 0,
+      });
+
+      logger.info(`Sync completed: ${syncId}`);
+      return { success: true };
+    } catch (error) {
+      logger.error(error, `Sync job failed: ${syncId}`);
+      await this.syncStateService.incrementRetryCount(syncId);
+      throw error;
+    }
+  }
+
+  private async processWebhookJob(job: Job<any>) {
+    const { webhookId, eventType, payload } = job.data;
+    logger.info(`Processing webhook job: ${webhookId}`);
+
+    try {
+      // TODO: Route webhook to appropriate sync processor
+      return { success: true };
+    } catch (error) {
+      logger.error(error, `Webhook job failed: ${webhookId}`);
+      throw error;
+    }
+  }
+
+  private async detectChanges(
+    sync: Sync,
+    sourceObjects: any[],
+    destObjects: any[],
+    state: any,
+  ) {
+    const toCreate: any[] = [];
+    const toUpdate: any[] = [];
+    const toDelete: any[] = [];
+
+    for (const sourceObj of sourceObjects) {
+      const mapping = await this.objectMappingRepository.findOneBy({
+        sync_id: sync.id,
+        source_object_id: sourceObj.id,
+      });
+
+      if (!mapping) {
+        // New object - create mapping and add to create list
+        toCreate.push(sourceObj);
+      } else {
+        // Check if source changed
+        const sourceChecksum = this.hashObject(sourceObj);
+        if (sourceChecksum !== mapping.source_checksum) {
+          toUpdate.push(sourceObj);
+        }
+      }
+    }
+
+    // Check for deletions
+    const sourceIds = new Set(sourceObjects.map((o) => o.id));
+    const mappings = await this.objectMappingRepository.find({
+      where: { sync_id: sync.id },
+    });
+
+    for (const mapping of mappings) {
+      if (!sourceIds.has(mapping.source_object_id)) {
+        toDelete.push({ id: mapping.destination_object_id });
+      }
+    }
+
+    return { toCreate, toUpdate, toDelete };
+  }
+
+  private hashObject(obj: any): string {
+    const str = JSON.stringify(obj);
+    return crypto.createHash('sha256').update(str).digest('hex');
   }
 
   private schedulePolling() {
@@ -70,7 +196,17 @@ export class SyncEngine implements OnModuleInit {
       try {
         logger.debug('Polling for syncs to run');
 
-        // TODO: Query all active syncs and queue them for processing
+        const syncs = await this.syncsRepository.find({
+          where: { status: 'active', deleted_at: null as any },
+        });
+
+        for (const sync of syncs) {
+          // Add slight random delay to spread load
+          const delay = Math.random() * 60000;
+          await this.queueSync(sync.id, 'normal');
+        }
+
+        logger.debug(`Queued ${syncs.length} syncs for polling`);
       } catch (error) {
         logger.error(error, 'Polling error');
       }
