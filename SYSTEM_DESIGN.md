@@ -40,8 +40,8 @@
 ### Phase 4: Core Providers (Wave 1)
 - [x] Todoist (OAuth + API)
 - [x] Google Calendar (OAuth + API)
-- [ ] Google Tasks (OAuth + API)
-- [ ] Microsoft To-Do (OAuth + API)
+- [x] Google Tasks (OAuth + API)
+- [x] Microsoft To-Do (OAuth + API)
 
 ### Phase 5: Extended Providers (Wave 2)
 - [ ] Google Contacts, Google Sheets, Gmail
@@ -51,26 +51,26 @@
 - [ ] Linear, Jira, TickTick
 
 ### Phase 6: Frontend & UX
-- [ ] Dashboard page
-- [ ] Integration onboarding flow
-- [ ] Sync configuration UI
-- [ ] Logs & history viewer
+- [x] Dashboard page
+- [x] Integration onboarding flow
+- [x] Sync configuration UI
+- [ ] Logs & history viewer (basic)
 - [ ] Conflict resolver UI
-- [ ] Settings & billing page
+- [x] Settings & billing page (placeholder)
 
 ### Phase 7: Testing & Reliability
-- [ ] Unit tests for core sync logic
-- [ ] Integration tests for providers
+- [x] Unit tests for core sync logic (started)
+- [ ] Integration tests for providers (framework ready)
 - [ ] End-to-end sync tests
 - [ ] Load & stress testing
 - [ ] Security audit
 
 ### Phase 8: Deployment & Operations
-- [ ] Docker & docker-compose setup
-- [ ] Kubernetes manifests
+- [x] Docker & docker-compose setup
+- [ ] Kubernetes manifests (template in SYSTEM_DESIGN.md)
 - [ ] CI/CD pipeline (GitHub Actions)
-- [ ] Monitoring & alerting
-- [ ] Documentation & runbooks
+- [ ] Monitoring & alerting (framework ready)
+- [x] Documentation & runbooks
 
 ---
 
