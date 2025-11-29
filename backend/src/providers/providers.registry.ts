@@ -11,17 +11,17 @@ export class ProvidersRegistry {
 
   constructor(
     private notionProvider: NotionProvider,
-    // More providers will be added here
+    private todoistProvider: any,
+    private googleCalendarProvider: any,
   ) {
     this.registerProviders();
   }
 
   private registerProviders() {
     this.register('notion', this.notionProvider);
-    // Register more providers as they are implemented
-    // this.register('todoist', this.todoistProvider);
-    // this.register('google_calendar', this.googleCalendarProvider);
-    // etc.
+    this.register('todoist', this.todoistProvider);
+    this.register('google_calendar', this.googleCalendarProvider);
+    // More providers to be registered as they are implemented
 
     logger.info(`Registered ${this.providers.size} providers`);
   }

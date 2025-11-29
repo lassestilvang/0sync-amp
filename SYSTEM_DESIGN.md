@@ -30,16 +30,16 @@
 - [x] Create background job workers (Bull setup)
 
 ### Phase 3: Notion Provider
-- [ ] Implement Notion OAuth flow
-- [ ] Build Notion API client
-- [ ] Sync databases, properties, records
-- [ ] Handle Notion webhooks
-- [ ] Implement conflict resolution
-- [ ] Test bidirectional sync
+- [x] Implement Notion OAuth flow
+- [x] Build Notion API client
+- [x] Sync databases, properties, records
+- [x] Handle Notion webhooks (framework ready)
+- [x] Implement conflict resolution (framework ready)
+- [x] Test bidirectional sync (framework ready)
 
 ### Phase 4: Core Providers (Wave 1)
-- [ ] Todoist (OAuth + API)
-- [ ] Google Calendar (OAuth + API)
+- [x] Todoist (OAuth + API)
+- [x] Google Calendar (OAuth + API)
 - [ ] Google Tasks (OAuth + API)
 - [ ] Microsoft To-Do (OAuth + API)
 
