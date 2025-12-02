@@ -15,44 +15,44 @@ import { Sync } from './sync.entity';
 @Index(['destination_provider', 'destination_object_id'])
 export class ObjectMapping {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  id!: string;
 
   @Column()
-  sync_id: string;
+  sync_id!: string;
 
   @Column()
-  source_object_id: string;
+  source_object_id!: string;
 
   @Column()
-  source_provider: string;
+  source_provider!: string;
 
   @Column()
-  destination_object_id: string;
+  destination_object_id!: string;
 
   @Column()
-  destination_provider: string;
+  destination_provider!: string;
 
-  @Column({ nullable: true })
-  source_checksum: string;
+  @Column({ type: 'varchar', nullable: true })
+  source_checksum!: string | null;
 
-  @Column({ nullable: true })
-  destination_checksum: string;
+  @Column({ type: 'varchar', nullable: true })
+  destination_checksum!: string | null;
 
-  @Column({ nullable: true })
-  synced_at: Date;
+  @Column({ type: 'timestamp', nullable: true })
+  synced_at!: Date | null;
 
   @Column({ default: false })
-  conflict_flag: boolean;
+  conflict_flag!: boolean;
 
   @Column({ type: 'jsonb', default: {} })
-  metadata: Record<string, any>;
+  metadata!: Record<string, unknown>;
 
   @CreateDateColumn()
-  created_at: Date;
+  created_at!: Date;
 
   @UpdateDateColumn()
-  updated_at: Date;
+  updated_at!: Date;
 
   @ManyToOne(() => Sync, (sync) => sync.object_mappings)
-  sync: Sync;
+  sync!: Sync;
 }

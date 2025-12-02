@@ -138,7 +138,7 @@ export class NotionProvider implements IProvider {
           result.created = (result.created || 0) + 1;
         } catch (error: any) {
           result.errors?.push({
-            id: obj.id || 'unknown',
+            id: String(obj.id || 'unknown'),
             error: error.message,
           });
         }
@@ -148,13 +148,13 @@ export class NotionProvider implements IProvider {
       for (const obj of changes.toUpdate) {
         try {
           await client.pages.update({
-            page_id: obj.id,
+            page_id: String(obj.id),
             properties: this.transformToNotionProperties(obj),
           });
           result.updated = (result.updated || 0) + 1;
         } catch (error: any) {
           result.errors?.push({
-            id: obj.id,
+            id: String(obj.id),
             error: error.message,
           });
         }
@@ -164,13 +164,13 @@ export class NotionProvider implements IProvider {
       for (const obj of changes.toDelete) {
         try {
           await client.pages.update({
-            page_id: obj.id,
+            page_id: String(obj.id),
             archived: true,
           });
           result.deleted = (result.deleted || 0) + 1;
         } catch (error: any) {
           result.errors?.push({
-            id: obj.id,
+            id: String(obj.id),
             error: error.message,
           });
         }
@@ -206,8 +206,8 @@ export class NotionProvider implements IProvider {
 
   private extractTitle(properties: Record<string, any>): string {
     for (const [key, prop] of Object.entries(properties)) {
-      if (prop.type === 'title' && (prop as any).title?.[0]) {
-        return (prop as any).title[0].plain_text;
+      if (prop.type === 'title' && (prop).title?.[0]) {
+        return (prop).title[0].plain_text;
       }
     }
     return '';

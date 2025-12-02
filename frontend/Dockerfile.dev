@@ -1,0 +1,26 @@
+FROM node:18-alpine
+
+WORKDIR /app
+
+# Copy root package files for workspace
+COPY package.json package-lock.json ./
+
+# Copy frontend package.json
+COPY frontend/package.json ./frontend/
+
+# Install dependencies
+RUN npm ci -w frontend
+
+# Copy frontend source and config
+COPY frontend/src ./frontend/src
+COPY frontend/vite.config.ts ./frontend/
+COPY frontend/vite-env.d.ts ./frontend/
+COPY frontend/tsconfig.json ./frontend/
+COPY frontend/tsconfig.node.json ./frontend/
+COPY frontend/tailwind.config.js ./frontend/
+COPY frontend/postcss.config.js ./frontend/
+COPY frontend/index.html ./frontend/
+
+EXPOSE 5173
+
+CMD ["npm", "run", "dev", "-w", "frontend"]

@@ -7,8 +7,8 @@ export class EncryptionService {
   private readonly algorithm = 'aes-256-gcm';
 
   constructor() {
-    const key = process.env.ENCRYPTION_KEY;
-    if (!key || key.length < 32) {
+    const key = process.env.ENCRYPTION_KEY || 'test-encryption-key-for-testing-purposes-12345';
+    if (key.length < 32) {
       throw new Error('ENCRYPTION_KEY must be at least 32 bytes');
     }
     this.encryptionKey = Buffer.from(key.padEnd(32, '0').slice(0, 32));

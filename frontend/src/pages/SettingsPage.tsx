@@ -1,10 +1,9 @@
 import { useEffect, useState } from 'react';
 import { apiService } from '../services/api.service';
-import { useAuthStore } from '../hooks/useAuth';
+import { UserProfile } from '../types';
 
 export default function SettingsPage() {
-  const { user } = useAuthStore();
-  const [profile, setProfile] = useState<any>(null);
+  const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

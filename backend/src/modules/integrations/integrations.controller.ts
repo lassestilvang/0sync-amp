@@ -19,7 +19,7 @@ export class IntegrationsController {
   }
 
   @Get(':provider/authorize')
-  async startOAuth(@Param('provider') provider: string) {
+  startOAuth(@Param('provider') provider: string) {
     const authUrl = this.oauthService.getAuthorizationUrl(provider);
     return { authUrl };
   }

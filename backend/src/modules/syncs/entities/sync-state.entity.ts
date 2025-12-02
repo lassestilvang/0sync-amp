@@ -11,41 +11,41 @@ import { Sync } from './sync.entity';
 @Entity('sync_states')
 export class SyncState {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  id!: string;
 
   @Column()
-  sync_id: string;
+  sync_id!: string;
 
-  @Column({ nullable: true })
-  last_sync_at: Date;
+  @Column({ type: 'timestamp', nullable: true })
+  last_sync_at!: Date | null;
 
-  @Column({ nullable: true })
-  source_cursor: string;
+  @Column({ type: 'varchar', nullable: true })
+  source_cursor!: string | null;
 
-  @Column({ nullable: true })
-  destination_cursor: string;
+  @Column({ type: 'varchar', nullable: true })
+  destination_cursor!: string | null;
 
-  @Column({ nullable: true })
-  last_conflict_at: Date;
-
-  @Column({ default: 0 })
-  conflict_count: number;
-
-  @Column({ nullable: true })
-  backoff_until: Date;
+  @Column({ type: 'timestamp', nullable: true })
+  last_conflict_at!: Date | null;
 
   @Column({ default: 0 })
-  retry_count: number;
+  conflict_count!: number;
+
+  @Column({ type: 'timestamp', nullable: true })
+  backoff_until!: Date | null;
+
+  @Column({ default: 0 })
+  retry_count!: number;
 
   @Column({ type: 'jsonb', default: {} })
-  metadata: Record<string, any>;
+  metadata!: Record<string, unknown>;
 
   @CreateDateColumn()
-  created_at: Date;
+  created_at!: Date;
 
   @UpdateDateColumn()
-  updated_at: Date;
+  updated_at!: Date;
 
   @ManyToOne(() => Sync, (sync) => sync.sync_states)
-  sync: Sync;
+  sync!: Sync;
 }

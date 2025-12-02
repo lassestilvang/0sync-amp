@@ -67,11 +67,11 @@ class ApiService {
     return this.client.get(`/syncs/${id}`);
   }
 
-  async createSync(data: any) {
+  async createSync(data: unknown) {
     return this.client.post('/syncs', data);
   }
 
-  async updateSync(id: string, data: any) {
+  async updateSync(id: string, data: unknown) {
     return this.client.put(`/syncs/${id}`, data);
   }
 
@@ -85,6 +85,28 @@ class ApiService {
 
   async triggerSync(id: string) {
     return this.client.post(`/syncs/${id}/run`);
+  }
+
+  async getSyncDetail(id: string) {
+    return this.client.get(`/syncs/${id}`);
+  }
+
+  async updateSyncFieldMapping(id: string, mappings: unknown) {
+    return this.client.put(`/syncs/${id}/mapping`, mappings);
+  }
+
+  // Conflicts endpoints
+  async getConflicts(params?: unknown) {
+    return this.client.get('/conflicts', { params });
+  }
+
+  async resolveConflict(id: string, data: unknown) {
+    return this.client.post(`/conflicts/${id}/resolve`, data);
+  }
+
+  // Logs endpoints
+  async getSyncLogs(params?: unknown) {
+    return this.client.get('/syncs/logs', { params });
   }
 
   // User endpoints

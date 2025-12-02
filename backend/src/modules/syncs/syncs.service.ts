@@ -49,7 +49,8 @@ export class SyncsService {
   }
 
   async update(id: string, updateData: Partial<Sync>): Promise<Sync> {
-    await this.syncsRepository.update(id, updateData);
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-explicit-any
+    await this.syncsRepository.update({ id }, updateData as any);
     const sync = await this.findById(id);
     if (!sync) {
       throw new NotFoundException('Sync not found');
@@ -105,7 +106,8 @@ export class SyncsService {
   }
 
   async updateObjectMapping(id: string, updates: Partial<ObjectMapping>) {
-    await this.objectMappingRepository.update(id, updates);
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-explicit-any
+    await this.objectMappingRepository.update({ id }, updates as any);
     return this.objectMappingRepository.findOneBy({ id });
   }
 }

@@ -11,6 +11,11 @@
     "dev": "concurrently \"npm run dev --workspace=backend\" \"npm run dev --workspace=frontend\"",
     "build": "npm run build --workspaces",
     "test": "npm run test --workspaces",
+    "test:unit": "npm run test:unit --workspace=backend",
+    "test:integration": "npm run test:integration --workspace=backend",
+    "test:e2e": "npm run test:e2e --workspace=backend",
+    "test:performance": "npm run test:performance --workspace=backend",
+    "test:coverage": "npm run test:coverage --workspace=backend",
     "lint": "npm run lint --workspaces"
   },
   "devDependencies": {

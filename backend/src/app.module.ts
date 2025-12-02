@@ -12,6 +12,7 @@ import { WebhooksModule } from './modules/webhooks/webhooks.module';
 import { SyncEngineModule } from './sync/sync.engine.module';
 import { DatabaseConfig } from './config/database.config';
 import { typeOrmConfig } from './config/typeorm.config';
+import { AppController } from './app.controller';
 
 @Module({
   imports: [
@@ -29,7 +30,7 @@ import { typeOrmConfig } from './config/typeorm.config';
     JwtModule.register({
       secret: process.env.JWT_SECRET || 'dev-secret',
       signOptions: {
-        expiresIn: process.env.JWT_EXPIRATION || '900s',
+        expiresIn: process.env.JWT_EXPIRATION ? parseInt(process.env.JWT_EXPIRATION, 10) : 900,
       },
     }),
     PassportModule.register({
@@ -42,7 +43,7 @@ import { typeOrmConfig } from './config/typeorm.config';
     WebhooksModule,
     SyncEngineModule,
   ],
-  controllers: [],
+  controllers: [AppController],
   providers: [],
 })
 export class AppModule {}

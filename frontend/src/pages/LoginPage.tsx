@@ -15,8 +15,14 @@ export default function LoginPage() {
     try {
       await login(email, password);
       navigate('/');
-    } catch (err: any) {
-      setError(err.response?.data?.message || 'Login failed');
+    } catch (err: unknown) {
+      const errorResponse = err as Record<string, unknown>;
+      const message =
+        ((errorResponse.response as Record<string, unknown>)?.data as Record<
+          string,
+          unknown
+        >)?.message || 'Login failed';
+      setError(message as string);
     }
   };
 

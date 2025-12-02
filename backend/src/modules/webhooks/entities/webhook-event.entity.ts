@@ -12,29 +12,29 @@ import { Webhook } from './webhook.entity';
 @Index(['processed'])
 export class WebhookEvent {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  id!: string;
 
   @Column()
-  webhook_id: string;
+  webhook_id!: string;
 
   @Column()
-  event_type: string;
+  event_type!: string;
 
   @Column({ type: 'jsonb' })
-  payload: Record<string, any>;
+  payload!: Record<string, unknown>;
 
   @Column({ default: false })
-  processed: boolean;
+  processed!: boolean;
 
-  @Column({ nullable: true })
-  error: string;
+  @Column({ type: 'varchar', nullable: true })
+  error!: string | null;
 
-  @Column({ nullable: true })
-  processed_at: Date;
+  @Column({ type: 'timestamp', nullable: true })
+  processed_at!: Date | null;
 
   @CreateDateColumn()
-  created_at: Date;
+  created_at!: Date;
 
   @ManyToOne(() => Webhook, (webhook) => webhook.events_received)
-  webhook: Webhook;
+  webhook!: Webhook;
 }

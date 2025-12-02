@@ -24,7 +24,8 @@ export class UsersService {
   }
 
   async update(id: string, userData: Partial<User>): Promise<User> {
-    await this.usersRepository.update(id, userData);
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-explicit-any
+    await this.usersRepository.update({ id }, userData as any);
     const user = await this.findById(id);
     if (!user) {
       throw new NotFoundException('User not found');

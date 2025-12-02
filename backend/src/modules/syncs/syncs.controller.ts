@@ -26,7 +26,7 @@ export class SyncsController {
   }
 
   @Put(':id')
-  async update(@Param('id') id: string, @Body() updateData: Partial<any>) {
+  async update(@Param('id') id: string, @Body() updateData: Record<string, unknown>) {
     return this.syncsService.update(id, updateData);
   }
 
@@ -43,7 +43,7 @@ export class SyncsController {
 
   @Post(':id/run')
   @HttpCode(200)
-  async triggerSync(@Param('id') id: string) {
+  triggerSync(@Param('id') id: string) {
     // This would queue a sync job - implemented in sync engine phase
     return { message: 'Sync queued', syncId: id };
   }

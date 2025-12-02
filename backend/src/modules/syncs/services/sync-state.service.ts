@@ -26,7 +26,7 @@ export class SyncStateService {
   }
 
   async update(syncId: string, updates: Partial<SyncState>): Promise<SyncState> {
-    await this.syncStateRepository.update({ sync_id: syncId }, updates);
+    await this.syncStateRepository.update({ sync_id: syncId }, updates as any);
 
     const state = await this.syncStateRepository.findOneBy({ sync_id: syncId });
     if (!state) {

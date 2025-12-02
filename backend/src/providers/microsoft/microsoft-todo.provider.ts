@@ -116,7 +116,7 @@ export class MicrosoftToDoProvider implements IProvider {
           );
           result.created = (result.created || 0) + 1;
         } catch (error: any) {
-          result.errors?.push({ id: obj.id || 'unknown', error: error.message });
+          result.errors?.push({ id: String(obj.id || 'unknown'), error: error.message });
         }
       }
       logger.info(`Pushed changes to Microsoft To-Do`);

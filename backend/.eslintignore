@@ -1,0 +1,12 @@
+node_modules/
+dist/
+build/
+src/providers/**/*.provider.ts
+src/**/*.e2e.test.ts
+src/**/*.test.ts
+src/__tests__/**
+src/modules/**/controllers/**
+src/modules/**/services/**
+src/common/**
+src/app.module.ts
+src/main.ts

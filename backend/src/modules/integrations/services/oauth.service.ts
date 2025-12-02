@@ -49,6 +49,38 @@ export const OAUTH_PROVIDERS = {
       'Mail.Read',
     ],
   },
+  linear: {
+    clientId: process.env.LINEAR_OAUTH_CLIENT_ID,
+    clientSecret: process.env.LINEAR_OAUTH_CLIENT_SECRET,
+    redirectUri: `${process.env.API_URL}/oauth/linear/callback`,
+    authUrl: 'https://linear.app/oauth/authorize',
+    tokenUrl: 'https://api.linear.app/oauth/token',
+    scopes: ['read', 'write', 'admin'],
+  },
+  jira: {
+    clientId: process.env.JIRA_OAUTH_CLIENT_ID,
+    clientSecret: process.env.JIRA_OAUTH_CLIENT_SECRET,
+    redirectUri: `${process.env.API_URL}/oauth/jira/callback`,
+    authUrl: 'https://auth.atlassian.com/authorize',
+    tokenUrl: 'https://auth.atlassian.com/oauth/token',
+    scopes: ['read:jira-work', 'write:jira-work', 'manage:jira-webhook'],
+  },
+  ticktick: {
+    clientId: process.env.TICKTICK_OAUTH_CLIENT_ID,
+    clientSecret: process.env.TICKTICK_OAUTH_CLIENT_SECRET,
+    redirectUri: `${process.env.API_URL}/oauth/ticktick/callback`,
+    authUrl: 'https://ticktick.com/oauth/authorize',
+    tokenUrl: 'https://ticktick.com/oauth/token',
+    scopes: ['tasks:read', 'tasks:write'],
+  },
+  apple: {
+    clientId: process.env.APPLE_OAUTH_CLIENT_ID,
+    clientSecret: process.env.APPLE_OAUTH_CLIENT_SECRET,
+    redirectUri: `${process.env.API_URL}/oauth/apple/callback`,
+    authUrl: 'https://appleid.apple.com/auth/authorize',
+    tokenUrl: 'https://appleid.apple.com/auth/token',
+    scopes: ['email'],
+  },
 };
 
 @Injectable()

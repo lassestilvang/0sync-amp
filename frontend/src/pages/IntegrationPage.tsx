@@ -3,14 +3,32 @@ import { apiService } from '../services/api.service';
 import { Plug2, X } from 'lucide-react';
 
 const PROVIDERS = [
+  // Wave 1
   { id: 'notion', name: 'Notion', icon: '🔷' },
   { id: 'todoist', name: 'Todoist', icon: '✓' },
   { id: 'google_calendar', name: 'Google Calendar', icon: '📅' },
   { id: 'google_tasks', name: 'Google Tasks', icon: '☑️' },
+  { id: 'microsoft_todo', name: 'Microsoft To-Do', icon: '✔️' },
+  // Wave 2: Google
   { id: 'google_contacts', name: 'Google Contacts', icon: '👥' },
   { id: 'google_sheets', name: 'Google Sheets', icon: '📊' },
-  { id: 'microsoft_todo', name: 'Microsoft To-Do', icon: '✔️' },
+  { id: 'gmail', name: 'Gmail', icon: '📧' },
+  // Wave 2: Microsoft
   { id: 'outlook_calendar', name: 'Outlook Calendar', icon: '📆' },
+  { id: 'outlook_contacts', name: 'Outlook Contacts', icon: '👤' },
+  { id: 'outlook_mail', name: 'Outlook Mail', icon: '💌' },
+  // Wave 2: Services
+  { id: 'github', name: 'GitHub', icon: '🐙' },
+  { id: 'trello', name: 'Trello', icon: '🎴' },
+  { id: 'asana', name: 'Asana', icon: '📋' },
+  // Wave 3: Extended services
+  { id: 'linear', name: 'Linear', icon: '▭' },
+  { id: 'jira', name: 'Jira', icon: '🔵' },
+  { id: 'ticktick', name: 'TickTick', icon: '✅' },
+  // Wave 3: Apple
+  { id: 'apple_calendar', name: 'Apple Calendar', icon: '📱' },
+  { id: 'apple_notes', name: 'Apple Notes', icon: '📝' },
+  { id: 'apple_reminders', name: 'Apple Reminders', icon: '🔔' },
 ];
 
 interface Integration {

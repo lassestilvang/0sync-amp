@@ -29,8 +29,8 @@ services:
 
   backend:
     build:
-      context: ./backend
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: backend/Dockerfile
     environment:
       NODE_ENV: development
       DATABASE_URL: postgresql://${DB_USER:-sync_user}:${DB_PASSWORD:-sync_password}@postgres:5432/${DB_NAME:-sync_db}
@@ -48,13 +48,13 @@ services:
       redis:
         condition: service_healthy
     volumes:
-      - ./backend/src:/app/src
-    command: npm run dev
+      - ./backend/src:/app/backend/src
+    command: npm run dev -w backend
 
   frontend:
     build:
-      context: ./frontend
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: frontend/Dockerfile.dev
     environment:
       VITE_API_URL: http://localhost:3000
     ports:
@@ -62,7 +62,12 @@ services:
     depends_on:
       - backend
     volumes:
-      - ./frontend/src:/app/src
+      - ./frontend/src:/app/frontend/src
+      - ./frontend/vite.config.ts:/app/frontend/vite.config.ts
+      - ./frontend/index.html:/app/frontend/index.html
+      - ./frontend/tailwind.config.js:/app/frontend/tailwind.config.js
+      - ./frontend/postcss.config.js:/app/frontend/postcss.config.js
+      - ./frontend/tsconfig.json:/app/frontend/tsconfig.json
 
 volumes:
   postgres_data:

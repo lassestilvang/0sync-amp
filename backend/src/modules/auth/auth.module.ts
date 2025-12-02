@@ -13,7 +13,7 @@ import { UsersService } from '../users/users.service';
     PassportModule,
     JwtModule.register({
       secret: process.env.JWT_SECRET || 'dev-secret',
-      signOptions: { expiresIn: process.env.JWT_EXPIRATION || '900s' },
+      signOptions: { expiresIn: process.env.JWT_EXPIRATION ? parseInt(process.env.JWT_EXPIRATION, 10) : 900 },
     }),
     TypeOrmModule.forFeature([User]),
   ],

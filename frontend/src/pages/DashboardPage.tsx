@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { apiService } from '../services/api.service';
-import { Plus, Play, Pause, Trash2 } from 'lucide-react';
+import { Plus, Play, Trash2 } from 'lucide-react';
 
 interface Sync {
   id: string;

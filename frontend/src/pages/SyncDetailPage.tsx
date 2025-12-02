@@ -1,21 +1,16 @@
 import { useParams } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { apiService } from '../services/api.service';
 import { Clock, AlertCircle } from 'lucide-react';
+import { SyncStatus } from '../types';
 
 export default function SyncDetailPage() {
   const { id } = useParams<{ id: string }>();
-  const [sync, setSync] = useState<any>(null);
-  const [status, setStatus] = useState<any>(null);
+  const [sync, setSync] = useState<SyncStatus | null>(null);
+  const [status, setStatus] = useState<SyncStatus | null>(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    if (id) {
-      loadSync();
-    }
-  }, [id]);
-
-  const loadSync = async () => {
+  const loadSync = useCallback(async (): Promise<void> => {
     try {
       const [syncRes, statusRes] = await Promise.all([
         apiService.getSync(id!),
@@ -28,7 +23,13 @@ export default function SyncDetailPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [id]);
+
+  useEffect(() => {
+    if (id) {
+      void loadSync();
+    }
+  }, [id, loadSync]);
 
   if (loading) {
     return <div className="p-8">Loading...</div>;

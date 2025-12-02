@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Param, Header, BadRequestException } from '@nestjs/common';
+import { Controller, Post, Body, Param, Headers, BadRequestException } from '@nestjs/common';
 import { WebhooksService } from './webhooks.service';
 import { createChildLogger } from '../../common/logger';
 
@@ -12,17 +12,21 @@ export class WebhooksController {
   async handleWebhook(
     @Param('provider') provider: string,
     @Param('id') webhookId: string,
-    @Body() payload: Record<string, any>,
-    @Header('x-signature') signature?: string,
+    @Body() payload: Record<string, unknown>,
+    @Headers('x-signature') signature?: string,
   ) {
     try {
       logger.info(`Received webhook from ${provider}: ${webhookId}`);
 
       // Verify webhook signature (provider-specific)
       // TODO: Implement per-provider signature verification
+      void signature; // Mark as used to avoid unused variable warning
 
       // Get event type from payload (varies by provider)
-      const eventType = payload.type || payload.event || 'unknown';
+      const eventType =
+        (payload.type as string | undefined) ||
+        (payload.event as string | undefined) ||
+        'unknown';
 
       // Record webhook event for async processing
       await this.webhooksService.recordEvent(webhookId, eventType, payload);

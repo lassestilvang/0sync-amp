@@ -166,7 +166,7 @@ export class GoogleCalendarProvider implements IProvider {
           result.created = (result.created || 0) + 1;
         } catch (error: any) {
           result.errors?.push({
-            id: obj.id || 'unknown',
+            id: String(obj.id || 'unknown'),
             error: error.message,
           });
         }
@@ -186,7 +186,7 @@ export class GoogleCalendarProvider implements IProvider {
           result.updated = (result.updated || 0) + 1;
         } catch (error: any) {
           result.errors?.push({
-            id: obj.id,
+            id: String(obj.id),
             error: error.message,
           });
         }
@@ -199,7 +199,7 @@ export class GoogleCalendarProvider implements IProvider {
           result.deleted = (result.deleted || 0) + 1;
         } catch (error: any) {
           result.errors?.push({
-            id: obj.id,
+            id: String(obj.id),
             error: error.message,
           });
         }

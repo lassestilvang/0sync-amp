@@ -10,7 +10,7 @@ export class UsersController {
 
   @Get('profile')
   @UseGuards(AuthGuard('jwt'))
-  async getProfile(@CurrentUser() user: User) {
+  getProfile(@CurrentUser() user: User) {
     return {
       id: user.id,
       email: user.email,

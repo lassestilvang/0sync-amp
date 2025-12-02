@@ -65,7 +65,8 @@ export class IntegrationsService {
       );
     }
 
-    await this.integrationsRepository.update(id, updateData);
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-explicit-any
+    await this.integrationsRepository.update({ id }, updateData as any);
     const integration = await this.findById(id);
     if (!integration) {
       throw new NotFoundException('Integration not found');

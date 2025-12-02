@@ -42,9 +42,14 @@ export const useAuthStore = create<AuthState>((set) => ({
         },
         loading: false,
       });
-    } catch (error: any) {
-      const message = error.response?.data?.message || 'Login failed';
-      set({ error: message, loading: false });
+    } catch (error: unknown) {
+      const errorResponse = error as Record<string, unknown>;
+      const message =
+        ((errorResponse.response as Record<string, unknown>)?.data as Record<
+          string,
+          unknown
+        >)?.message || 'Login failed';
+      set({ error: message as string, loading: false });
       throw error;
     }
   },
@@ -67,12 +72,17 @@ export const useAuthStore = create<AuthState>((set) => ({
         },
         loading: false,
       });
-    } catch (error: any) {
-      const message = error.response?.data?.message || 'Signup failed';
-      set({ error: message, loading: false });
+    } catch (error: unknown) {
+      const errorResponse = error as Record<string, unknown>;
+      const message =
+        ((errorResponse.response as Record<string, unknown>)?.data as Record<
+          string,
+          unknown
+        >)?.message || 'Signup failed';
+      set({ error: message as string, loading: false });
       throw error;
     }
-  },
+    },
 
   logout: () => {
     localStorage.removeItem('token');

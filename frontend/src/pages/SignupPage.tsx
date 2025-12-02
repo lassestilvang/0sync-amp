@@ -16,8 +16,14 @@ export default function SignupPage() {
     try {
       await signup(email, password, fullName);
       navigate('/');
-    } catch (err: any) {
-      setError(err.response?.data?.message || 'Signup failed');
+    } catch (err: unknown) {
+      const errorResponse = err as Record<string, unknown>;
+      const message =
+        ((errorResponse.response as Record<string, unknown>)?.data as Record<
+          string,
+          unknown
+        >)?.message || 'Signup failed';
+      setError(message as string);
     }
   };
 

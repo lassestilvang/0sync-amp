@@ -1,7 +1,7 @@
 import { Integration } from '../modules/integrations/entities/integration.entity';
 
 export interface FetchResult {
-  objects: any[];
+  objects: Array<Record<string, unknown>>;
   nextCursor?: string;
 }
 
@@ -34,14 +34,14 @@ export interface RateLimitInfo {
 export interface ParsedWebhookEvent {
   type: string;
   objectId: string;
-  data: Record<string, any>;
+  data: Record<string, unknown>;
   timestamp: string;
 }
 
 export interface TransformedChangeSet {
-  toCreate: any[];
-  toUpdate: any[];
-  toDelete: any[];
+  toCreate: Array<Record<string, unknown>>;
+  toUpdate: Array<Record<string, unknown>>;
+  toDelete: Array<Record<string, unknown>>;
 }
 
 export interface IProvider {
@@ -59,24 +59,26 @@ export interface IProvider {
   // Data fetching
   fetch(
     integration: Integration,
-    config: Record<string, any>,
+    config: Record<string, unknown>,
     cursor?: string,
   ): Promise<FetchResult>;
 
   // Data pushing
   pushChanges(
     integration: Integration,
-    config: Record<string, any>,
+    config: Record<string, unknown>,
     changes: TransformedChangeSet,
   ): Promise<PushResult>;
 
   // Webhook management
   registerWebhook?(webhookUrl: string): Promise<WebhookRegistration>;
   verifyWebhookSignature?(signature: string, payload: Buffer): boolean;
-  parseWebhookPayload?(payload: Record<string, any>): ParsedWebhookEvent[];
+  parseWebhookPayload?(
+    payload: Record<string, unknown>,
+  ): ParsedWebhookEvent[];
 
   // Batch operations
-  batchCreate?(objects: any[]): Promise<string[]>;
-  batchUpdate?(objects: any[]): Promise<void>;
+  batchCreate?(objects: Array<Record<string, unknown>>): Promise<string[]>;
+  batchUpdate?(objects: Array<Record<string, unknown>>): Promise<void>;
   batchDelete?(ids: string[]): Promise<void>;
 }

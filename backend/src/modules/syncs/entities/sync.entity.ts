@@ -15,77 +15,77 @@ import { ObjectMapping } from './object-mapping.entity';
 @Entity('syncs')
 export class Sync {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  id!: string;
 
   @Column()
-  user_id: string;
+  user_id!: string;
 
   @Column()
-  name: string;
+  name!: string;
 
-  @Column({ nullable: true })
-  description: string;
-
-  @Column()
-  source_integration_id: string;
+  @Column({ type: 'varchar', nullable: true })
+  description?: string;
 
   @Column()
-  source_type: string;
+  source_integration_id!: string;
+
+  @Column()
+  source_type!: string;
 
   @Column({ type: 'jsonb', default: {} })
-  source_config: Record<string, any>;
+  source_config!: Record<string, unknown>;
 
   @Column()
-  destination_integration_id: string;
+  destination_integration_id!: string;
 
   @Column()
-  destination_type: string;
+  destination_type!: string;
 
   @Column({ type: 'jsonb', default: {} })
-  destination_config: Record<string, any>;
+  destination_config!: Record<string, unknown>;
 
-  @Column({ default: 'bidirectional' })
-  direction: 'one_way' | 'bidirectional';
+  @Column({ type: 'varchar', default: 'bidirectional' })
+  direction!: 'one_way' | 'bidirectional';
 
-  @Column({ default: 'active' })
-  status: 'active' | 'paused' | 'error';
+  @Column({ type: 'varchar', default: 'active' })
+  status!: 'active' | 'paused' | 'error';
 
-  @Column({ default: 'last_write_wins' })
-  conflict_resolution: 'last_write_wins' | 'manual';
+  @Column({ type: 'varchar', default: 'last_write_wins' })
+  conflict_resolution!: 'last_write_wins' | 'manual';
 
   @Column({ type: 'jsonb', default: {} })
-  field_mapping: Record<string, any>;
+  field_mapping!: Record<string, unknown>;
 
   @Column({ type: 'jsonb', nullable: true })
-  filter_config: Record<string, any>;
+  filter_config?: Record<string, unknown>;
 
-  @Column({ nullable: true })
-  last_error: string;
+  @Column({ type: 'varchar', nullable: true })
+  last_error?: string;
 
-  @Column({ nullable: true })
-  last_error_at: Date;
+  @Column({ type: 'timestamp', nullable: true })
+  last_error_at?: Date;
 
   @CreateDateColumn()
-  created_at: Date;
+  created_at!: Date;
 
   @UpdateDateColumn()
-  updated_at: Date;
+  updated_at!: Date;
 
-  @Column({ nullable: true })
-  deleted_at: Date;
+  @Column({ type: 'timestamp', nullable: true })
+  deleted_at?: Date;
 
   @ManyToOne(() => User, (user) => user.syncs)
-  user: User;
+  user!: User;
 
   @ManyToOne(() => Integration)
-  source_integration: Integration;
+  source_integration!: Integration;
 
   @ManyToOne(() => Integration)
-  destination_integration: Integration;
+  destination_integration!: Integration;
 
   @OneToMany(() => SyncState, (state) => state.sync)
-  sync_states: SyncState[];
+  sync_states!: SyncState[];
 
   @OneToMany(() => ObjectMapping, (mapping) => mapping.sync)
-  object_mappings: ObjectMapping[];
+  object_mappings!: ObjectMapping[];
 }

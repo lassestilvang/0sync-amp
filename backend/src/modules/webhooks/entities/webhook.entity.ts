@@ -13,38 +13,38 @@ import { WebhookEvent } from './webhook-event.entity';
 @Entity('webhooks')
 export class Webhook {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  id!: string;
 
   @Column()
-  integration_id: string;
+  integration_id!: string;
 
   @Column()
-  provider: string;
+  provider!: string;
 
   @Column({ unique: true })
-  webhook_url: string;
+  webhook_url!: string;
 
-  @Column({ nullable: true })
-  webhook_secret: string;
+  @Column({ type: 'varchar', nullable: true })
+  webhook_secret?: string;
 
   @Column('text', { array: true, default: () => "'{}'::text[]" })
-  events: string[];
+  events!: string[];
 
-  @Column({ default: 'active' })
-  status: 'active' | 'inactive' | 'error';
+  @Column({ type: 'varchar', default: 'active' })
+  status!: 'active' | 'inactive' | 'error';
 
-  @Column({ nullable: true })
-  last_received_at: Date;
+  @Column({ type: 'timestamp', nullable: true })
+  last_received_at?: Date;
 
   @CreateDateColumn()
-  created_at: Date;
+  created_at!: Date;
 
   @UpdateDateColumn()
-  updated_at: Date;
+  updated_at!: Date;
 
   @ManyToOne(() => Integration, (integ) => integ.webhooks)
-  integration: Integration;
+  integration!: Integration;
 
   @OneToMany(() => WebhookEvent, (event) => event.webhook)
-  events_received: WebhookEvent[];
+  events_received!: WebhookEvent[];
 }
