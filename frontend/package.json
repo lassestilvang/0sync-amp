@@ -11,13 +11,6 @@
     "test": "echo \"No tests configured for frontend\""
   },
   "dependencies": {
-    "@nestjs/cli": "11.0.16",
-    "@nestjs/common": "11.1.17",
-    "@nestjs/config": "4.0.3",
-    "@nestjs/core": "11.1.17",
-    "@nestjs/platform-express": "11.1.17",
-    "@nestjs/schematics": "7.3.1",
-    "@nestjs/typeorm": "11.0.0",
     "axios": "^1.13.5",
     "lucide-react": "^0.358.0",
     "react": "^18.2.0",
