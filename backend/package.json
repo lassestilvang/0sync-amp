@@ -15,12 +15,12 @@
     "db:seed": "node scripts/seed.js"
   },
   "dependencies": {
-    "@nestjs/bull": "^10.0.1",
+    "@nestjs/bull": "^11.0.4",
     "@nestjs/common": "^11.1.17",
     "@nestjs/config": "^4.0.3",
     "@nestjs/core": "^11.1.17",
     "@nestjs/jwt": "^11.0.1",
-    "@nestjs/passport": "^10.0.3",
+    "@nestjs/passport": "^11.0.5",
     "@nestjs/platform-express": "^11.1.17",
     "@nestjs/typeorm": "^11.0.0",
     "@notionhq/client": "^2.2.13",
@@ -46,8 +46,8 @@
   },
   "devDependencies": {
     "@nestjs/cli": "^11.0.16",
-    "@nestjs/schematics": "^7.3.1",
-    "@nestjs/testing": "^10.3.0",
+    "@nestjs/schematics": "^11.0.9",
+    "@nestjs/testing": "^11.1.17",
     "@types/bcryptjs": "^2.4.0",
     "@types/jest": "^29.5.11",
     "@types/node": "^20.10.6",
