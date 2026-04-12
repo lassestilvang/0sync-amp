@@ -24,7 +24,7 @@
     "@nestjs/platform-express": "^11.1.17",
     "@nestjs/typeorm": "^11.0.0",
     "@notionhq/client": "^2.2.13",
-    "axios": "^1.13.5",
+    "axios": "^1.15.0",
     "bcryptjs": "^2.4.3",
     "bull": "^4.11.5",
     "class-transformer": "^0.5.1",
