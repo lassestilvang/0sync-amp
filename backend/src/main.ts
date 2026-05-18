@@ -1,17 +1,22 @@
-import { NestFactory } from '@nestjs/core';
+import { NestFactory, HttpAdapterHost } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import helmet from 'helmet';
 import { AppModule } from './app.module';
 import { logger } from './common/logger';
+import { AllExceptionsFilter } from './common/filters/all-exceptions.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const configService = app.get(ConfigService);
+  const httpAdapterHost = app.get(HttpAdapterHost);
 
   // Security headers
   app.use(helmet());
+
+  // Global filters
+  app.useGlobalFilters(new AllExceptionsFilter(httpAdapterHost));
 
   // Swagger Documentation
   const config = new DocumentBuilder()
