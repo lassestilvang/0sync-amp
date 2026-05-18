@@ -16,9 +16,23 @@
     "test:e2e": "npm run test:e2e --workspace=backend",
     "test:performance": "npm run test:performance --workspace=backend",
     "test:coverage": "npm run test:coverage --workspace=backend",
-    "lint": "npm run lint --workspaces"
+    "lint": "npm run lint --workspaces",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "backend/src/**/*.ts": [
+      "npm run lint --workspace=backend",
+      "prettier --write"
+    ],
+    "frontend/src/**/*.{ts,tsx}": [
+      "npm run lint --workspace=frontend",
+      "prettier --write"
+    ]
   },
   "devDependencies": {
-    "concurrently": "^8.2.2"
+    "concurrently": "^8.2.2",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.0.5",
+    "prettier": "^3.8.3"
   }
 }
