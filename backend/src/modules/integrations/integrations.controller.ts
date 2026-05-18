@@ -1,10 +1,12 @@
 import { Controller, Get, Post, Delete, UseGuards, Param, Query, HttpCode } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
+import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { IntegrationsService } from './integrations.service';
 import { OAuthService } from './services/oauth.service';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { User } from '../users/entities/user.entity';
 
+@ApiTags('integrations')
 @Controller('integrations')
 export class IntegrationsController {
   constructor(
@@ -13,12 +15,17 @@ export class IntegrationsController {
   ) {}
 
   @Get()
+  @ApiBearerAuth()
   @UseGuards(AuthGuard('jwt'))
+  @ApiOperation({ summary: 'List all integrations for the current user' })
+  @ApiResponse({ status: 200, description: 'Return all integrations' })
   async list(@CurrentUser() user: User) {
     return this.integrationsService.findByUser(user.id);
   }
 
   @Get(':provider/authorize')
+  @ApiOperation({ summary: 'Get the authorization URL for a provider' })
+  @ApiResponse({ status: 200, description: 'Return the auth URL' })
   startOAuth(@Param('provider') provider: string) {
     const authUrl = this.oauthService.getAuthorizationUrl(provider);
     return { authUrl };
@@ -26,6 +33,8 @@ export class IntegrationsController {
 
   @Post(':provider/callback')
   @HttpCode(200)
+  @ApiOperation({ summary: 'Handle OAuth callback and create integration' })
+  @ApiResponse({ status: 200, description: 'Integration created' })
   async handleOAuthCallback(
     @Param('provider') provider: string,
     @Query() query: { code: string; state: string },
@@ -54,7 +63,10 @@ export class IntegrationsController {
   }
 
   @Delete(':id')
+  @ApiBearerAuth()
   @UseGuards(AuthGuard('jwt'))
+  @ApiOperation({ summary: 'Disconnect an integration' })
+  @ApiResponse({ status: 200, description: 'Integration disconnected' })
   async disconnect(@Param('id') id: string, @CurrentUser() user: User) {
     const integration = await this.integrationsService.findById(id);
     if (!integration || integration.user_id !== user.id) {
