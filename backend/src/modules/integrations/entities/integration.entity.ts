@@ -6,15 +6,20 @@ import {
   UpdateDateColumn,
   ManyToOne,
   OneToMany,
+  Index,
 } from 'typeorm';
 import { User } from '../../users/entities/user.entity';
 import { Webhook } from '../../webhooks/entities/webhook.entity';
 
 @Entity('integrations')
+@Index(['user_id', 'provider'])
+@Index(['status'])
+@Index(['created_at'])
 export class Integration {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
 
+  @Index()
   @Column()
   user_id!: string;
 

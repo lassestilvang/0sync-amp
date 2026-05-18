@@ -6,6 +6,7 @@ import {
   UpdateDateColumn,
   ManyToOne,
   OneToMany,
+  Index,
 } from 'typeorm';
 import { User } from '../../users/entities/user.entity';
 import { Integration } from '../../integrations/entities/integration.entity';
@@ -13,10 +14,13 @@ import { SyncState } from './sync-state.entity';
 import { ObjectMapping } from './object-mapping.entity';
 
 @Entity('syncs')
+@Index(['user_id', 'created_at'])
+@Index(['status'])
 export class Sync {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
 
+  @Index()
   @Column()
   user_id!: string;
 
